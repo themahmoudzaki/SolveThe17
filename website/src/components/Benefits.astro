@@ -1,0 +1,142 @@
+---
+const benefits = [
+  {
+    title: "Early Threat Detection",
+    description: "Identify predators and diseases before they harm your colony.",
+    icon: "shield-check",
+    color: "honey"
+  },
+  {
+    title: "Productivity Insights",
+    description: "Track bee activity and optimize honey production.",
+    icon: "chart-bar",
+    color: "leaf"
+  },
+  {
+    title: "Remote Monitoring",
+    description: "Check on your hives from anywhere using our mobile app.",
+    icon: "device-mobile",
+    color: "earth"
+  },
+  {
+    title: "Conservation Support",
+    description: "Contribute to bee conservation with data-driven hive management.",
+    icon: "globe",
+    color: "honey"
+  },
+  {
+    title: "Time Saving",
+    description: "Reduce manual inspection time by up to 70%.",
+    icon: "clock",
+    color: "leaf"
+  },
+  {
+    title: "Research Contribution",
+    description: "Opt to share anonymous data to support bee research initiatives.",
+    icon: "academic-cap",
+    color: "earth"
+  }
+];
+
+// Helper function to get the right icon SVG based on name
+const getIcon = (name) => {
+  switch(name) {
+    case 'shield-check':
+      return `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+              </svg>`;
+    case 'chart-bar':
+      return `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+              </svg>`;
+    case 'device-mobile':
+      return `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+              </svg>`;
+    case 'globe':
+      return `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>`;
+    case 'clock':
+      return `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>`;
+    case 'academic-cap':
+      return `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path d="M12 14l9-5-9-5-9 5 9 5z" />
+                <path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222" />
+              </svg>`;
+    default:
+      return `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>`;
+  }
+};
+
+// Helper function to get color classes based on color name
+const getColorClasses = (color) => {
+  switch(color) {
+    case 'honey':
+      return {
+        bg: 'bg-honey-100',
+        text: 'text-honey-600',
+        hover: 'hover:border-honey-500',
+        shadow: 'shadow-honey-500/20'
+      };
+    case 'leaf':
+      return {
+        bg: 'bg-leaf-100',
+        text: 'text-leaf-600',
+        hover: 'hover:border-leaf-500',
+        shadow: 'shadow-leaf-500/20'
+      };
+    case 'earth':
+      return {
+        bg: 'bg-earth-100',
+        text: 'text-earth-600',
+        hover: 'hover:border-earth-500',
+        shadow: 'shadow-earth-500/20'
+      };
+    default:
+      return {
+        bg: 'bg-gray-100',
+        text: 'text-gray-600',
+        hover: 'hover:border-gray-500',
+        shadow: 'shadow-gray-500/20'
+      };
+  }
+};
+---
+
+<section id="benefits" class="py-20 bg-gray-50">
+  <div class="container mx-auto px-4">
+    <div class="text-center mb-16">
+      <h2 class="text-3xl md:text-4xl font-bold mb-4">Benefits for <span class="text-honey-500">Beekeepers</span></h2>
+      <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+        BeeWise helps you manage your hives more efficiently while promoting bee health and increasing productivity.
+      </p>
+    </div>
+    
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+      {benefits.map((benefit, index) => {
+        const colors = getColorClasses(benefit.color);
+        return (
+          <div class={`bg-white p-6 rounded-xl border-2 border-transparent transition-all duration-300 ${colors.hover} shadow-lg ${colors.shadow} hover:-translate-y-1`} style={`animation: fadeInUp 0.5s ease-out forwards; animation-delay: ${index * 0.1}s; opacity: 0;`}>
+            <div class={`${colors.bg} p-3 inline-flex rounded-full mb-5 ${colors.text}`}>
+              <Fragment set:html={getIcon(benefit.icon)} />
+            </div>
+            <h3 class="text-xl font-bold mb-3">{benefit.title}</h3>
+            <p class="text-gray-600">{benefit.description}</p>
+          </div>
+        )
+      })}
+    </div>
+    
+    <div class="mt-16 text-center">
+      <a href="#contact" class="px-8 py-4 bg-honey-500 hover:bg-honey-600 text-white rounded-lg transition-all duration-300 font-medium inline-block shadow-xl shadow-honey-500/20 hover:shadow-honey-600/30 hover:-translate-y-1">
+        Start Protecting Your Hives Today
+      </a>
+    </div>
+  </div>
+</section>
