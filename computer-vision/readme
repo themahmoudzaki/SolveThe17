@@ -1,0 +1,5 @@
+This project uses
+
+python=3.10.16
+tensorflow=2.10.0
+numpy=1.26.4
