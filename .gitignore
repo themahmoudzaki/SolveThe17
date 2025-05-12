@@ -1,8 +1,3 @@
-computer-vision\Data\bee_imgs.zip
-computer-vision/Data/bee_imgs/
-computer-vision/Data/dataset_2/bee/
-computer-vision/Data/dataset_2/non_bee/
-computer-vision/Data/dataset_2/mimics/
-computer-vision/Data/dataset_2/bee.zip
-computer-vision/Data/dataset_2/non_bee.zip
-computer-vision/Data/dataset_2/mimics.zip
+computer-vision/__pycache__/
+computer-vision/Data/dataset_1/
+computer-vision/Data/dataset_2/
