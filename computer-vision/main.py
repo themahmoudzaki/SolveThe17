@@ -1,7 +1,7 @@
-from utils          import *
-from preprocess_D1  import preprocess_D1
-from preprocess_D2  import preprocess_D2
-from model_D2       import model_D2
+from utils            import *
+from preprocess_D1    import preprocess_D1
+from image_loader_D2  import loading_handler_D2
+from model_D2         import model_D2
 
 def setup_env():
   section_print('Enviroment Setup')
@@ -27,7 +27,7 @@ def main():
   setup_env()
 
 
-  X_D2, y_D2 = preprocess_D2()
+  X_D2, y_D2 = loading_handler_D2()
   model_D2(X_D2, y_D2, test_size=0.2, random_state=42)
 
   section_print('Program Finished Succesfully')
