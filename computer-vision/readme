@@ -7,3 +7,142 @@ numpy=1.23.5
 
 you can use a newer version of tensorflow
 just make sure to have a compaitable cuDNN, CUDA, and Numpy versions
+
+```
+# Bee Image Classification Project
+
+This project focuses on classifying images of bees versus non-bees (including bee mimics) using a Convolutional Neural Network (CNN) built with TensorFlow/Keras. It also includes preprocessing scripts for two different datasets
+
+```
+## Project Structure
+```
+computer-vision/
+├── Data/
+│   ├── dataset_1/
+│   │   ├── bee_imgs/         # Raw images for Dataset 1
+│   │   ├── bee_data.csv      # Original CSV for Dataset 1
+│   │   └── processed_data/
+│   │       └── bee_data.csv  # Processed CSV for Dataset 1
+│   └── dataset_2/
+│       ├── bee/              # Images of bees for Dataset 2
+│       ├── non_bee/          # Images of non-bees for Dataset 2
+│       └── mimics/           # Images of bee mimics for Dataset 2
+├── model/
+│   └── D2/                  # Saved TensorFlow model for Dataset 2
+├── utils.py                # Utility functions, constants, and imports
+├── preprocess_D1.py        # Preprocessing script for Dataset 1
+├── preprocess_D2.py        # Preprocessing script for Dataset 2 (image loading & labeling)
+├── model_D2.py             # CNN model definition, training, and saving for Dataset 2
+├── main.py                 # Main script to run the D2 preprocessing and model training
+└── README.md               # This file
+```
+
+## File Descriptions
+
+### `utils.py`
+*   **Purpose**: Contains shared constants, configurations, and utility functions used across the project.
+*   **Key Contents**:
+    *   Imports common libraries.
+    *   Defines base directory paths for datasets (`BASE_DIR`).
+    *   **Dataset 1 (D1) Paths**:
+        *   `DATASET_1`: Root directory for D1.
+        *   `IMG_DIR_D1`: Directory for D1 images.
+        *   `CSV_PATH_D1`: Path to the processed D1 CSV (used by `main.py` if D1 was integrated).
+        *   `INPUT_FILE_D1`: Path to the raw D1 CSV (used by `preprocess_D1.py`).
+        *   `OUTPUT_DIR_D1`: Directory for processed D1 data.
+        *   `OUTPUT_FILE_D1`: Path for the saved processed D1 CSV.
+    *   **Dataset 2 (D2) Paths**:
+        *   `DATASET_2`: Root directory for D2.
+        *   `BEE_DIR`: Directory for bee images in D2.
+        *   `NON_BEE_DIR`: Directory for non-bee images in D2.
+        *   `MIMICS_DIR`: Directory for bee mimic images in D2.
+        *   `MODEL_D2_DIR`: Directory to save the D2 model.
+        *   `MODEL_D2_FILE`: Specific path for the saved D2 model.
+    *   `IMAGE_SIZE = (224, 224)`: Target image dimensions for D2 model input.
+    *   GPU availability check and TensorFlow logging suppression.
+    *   `section_print()`: A helper function for formatted console output.
+
+### `main.py`
+*   **Purpose**: The main entry point of the application.
+*   **Workflow**:
+    1.  Prints TensorFlow and NumPy versions, and GPU availability.
+    2.  Sets memory growth for available GPUs.
+    3.  Controls the project flow
+
+### `preprocess_D1.py`
+*   **Purpose**: Preprocesses a CSV file (`bee_data.csv`) associated with Dataset 1.
+*   **Operations**:
+    1.  Ensures the output directory (`OUTPUT_DIR_D1`) exists.
+    2.  Reads the input CSV (`INPUT_FILE_D1`).
+    3.  Drops specified columns: 'zip code', 'date', 'time', 'location'.
+    4.  Filters out rows where 'subspecies' is "-1".
+    5.  Creates a 'file_path' column by combining `IMG_DIR_D1` with the 'file' column.
+    6.  Drops the original 'file' column.
+    7.  Saves the processed DataFrame to `OUTPUT_FILE_D1`.
+
+### `preprocess_D2.py`
+*   **Purpose**: Loads and prepares image data from Dataset 2 for binary classification (bee vs. non-bee).
+*   **Key Constants**:
+    *   `BEE_LABEL = 0`
+    *   `NON_BEE_LABEL = 1`
+*   **Workflow**:
+    1.  Gets lists of image file paths from `BEE_DIR`, `NON_BEE_DIR`, and `MIMICS_DIR`.
+    2.  The `load_data()` function iterates through image paths:
+        *   Loads each image using `tf.keras.preprocessing.image.load_img()`, resizing it to `IMAGE_SIZE`.
+        *   Converts the image to a NumPy array.
+        *   Appends the image array and its corresponding label to lists.
+    3.  Calls `load_data()` for bee images (label 0), non-bee images (label 1), and mimic images (label 1).
+    4.  Prints dataset statistics (total images, bee images, non-bee images).
+    5.  Returns the image data and labels as NumPy arrays.
+
+### `model_D2.py`
+*   **Purpose**: Defines, trains, evaluates, and saves the CNN model for Dataset 2.
+*   **`model_D2(X, y, test_size, random_state)`**:
+    1.  Calls `cnn_model_D2()` to get the model architecture.
+    2.  Calls `train_model()` to train and evaluate the model.
+*   **`cnn_model_D2()`**:
+    1.  Defines a `tf.keras.Sequential` model with the following layers:
+        *   `Rescaling` (1./255): Normalizes pixel values. Input shape includes `IMAGE_SIZE`.
+        *   Data Augmentation: `RandomFlip`, `RandomRotation`, `RandomZoom`.
+        *   Convolutional blocks: `Conv2D` (32, 64, 128 filters) with 'relu' activation, followed by `MaxPooling2D`.
+        *   `Flatten`: To convert 2D feature maps to a 1D vector.
+        *   `Dense` (128 units, 'relu' activation).
+        *   `Dropout` (0.4): For regularization.
+        *   `Dense` (1 unit, 'sigmoid' activation): Output layer for binary classification.
+    2.  Compiles the model with:
+        *   Optimizer: `Adam` (learning rate 1e-4).
+        *   Loss: `binary_crossentropy`.
+        *   Metrics: `accuracy`.
+    3.  Prints the model summary.
+    4.  Returns the compiled model.
+*   **`train_model(model, X, y, test_size, random_state)`**:
+    1.  Splits the data (X, y) into training and testing sets using `train_test_split` with stratification.
+    2.  Trains the model using `model.fit()`:
+        *   Epochs: 30.
+        *   Batch size: 32.
+        *   Validation data: (X_test, y_test).
+        *   Callbacks: `EarlyStopping` (patience=5, restore_best_weights=True).
+    3.  Evaluates the model on the test set (`model.evaluate()`) and prints validation accuracy.
+    4.  Creates the model saving directory (`MODEL_D2_DIR`) if it doesn't exist.
+    5.  Saves the trained model to `MODEL_D2_FILE`.
+
+## Prerequisites
+python=3.10.16
+tensorflow=2.10
+numpy=1.23.5
+*   Python 3.10.16
+*   TensorFlow 2.10
+*   NumPy 1.23.5
+*   Pandas
+*   Scikit-learn
+*   Matplotlib
+
+## Potential Future Work
+
+*   Integrate Dataset 1 into a training pipeline or use it for a different task.
+*   Implement more sophisticated data augmentation techniques.
+*   Perform hyperparameter tuning for the CNN model.
+*   Add more detailed model evaluation metrics (e.g., confusion matrix, classification report, ROC-AUC curves).
+*   Implement logging for training progress and results.
+*   Use a configuration file (e.g., YAML, JSON) for managing paths and hyperparameters instead of hardcoding them in `utils.py`.
+```
