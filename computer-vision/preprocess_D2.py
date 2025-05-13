@@ -1,49 +1,80 @@
 from utils import *
 
+
 BEE_LABEL     = 0
 NON_BEE_LABEL = 1
 
-def load_data(data_arr, data_label_arr, img_path_list, label_value):
-  img_count = len(img_path_list)
-  print(f'Loading {img_count} images with label {label_value}...')
-  for img_path in img_path_list:
+def load_image(img_path):
+  try:
     img = tf.keras.preprocessing.image.load_img(
       img_path,
-      target_size = IMAGE_SIZE
+      target_size=IMAGE_SIZE
     )
     img_array = tf.keras.preprocessing.image.img_to_array(img)
-    data_arr.append(img_array)
-    data_label_arr.append(label_value)
+
+    return img_array
+  except Exception as err:
+    print(f'Error loading: {img_path}: {err}')
+    return None
+
+def load_data_batch(img_paths, label_value):
+  data_batch    = []
+  labels_batch  = []
+
+  with ThreadPoolExecutor() as executor:
+    results = list(
+      executor.map(
+        load_image,
+        img_paths
+      )
+    )
+
+  for result in results:
+    if result is not None:
+      data_batch.append(result)
+      labels_batch.append(label_value)
+
+  return data_batch, labels_batch
+
+
+def load_dataset(img_dirs_and_labels):
+  data          = []
+  labels        = []
+  bee_count     = 0
+  non_bee_count = 0
+
+  section_print('Loading Dataset D2')
+
+  for dir_path, label in img_dirs_and_labels:
+    img_paths = list(dir_path.glob('*.*'))
+
+    if label == BEE_LABEL: bee_count      += len(img_paths)
+    else:                  non_bee_count  += len(img_paths)
+    print(f'Loading {len(img_paths)} images with label {label}')
+
+    num_batches = math.ceil( len( img_paths ) / BATCH_SIZE )
+
+    for i in tqdm( range( num_batches ) ):
+      start_idx = i * BATCH_SIZE
+      end_idx   = min( ( i + 1 ) * BATCH_SIZE, len( img_paths ) )
+      batch_paths = img_paths[ start_idx:end_idx ]
+
+      batch_data, batch_labels = load_data_batch(batch_paths, label)
+      data.extend( batch_data )
+      labels.extend( batch_labels )
+
+  section_print('Dataset Statistics')
+  print(f'Total Images : {len( data )}')
+  print(f'Bee Images: {bee_count}')
+  print(f'Non-Bee Images: {non_bee_count}')
+
+  return np.array(data), np.array(labels)
 
 def preprocess_D2():
+  img_dirs_and_labels = [
+    (BEE_DIR, BEE_LABEL),
+    (NON_BEE_DIR, NON_BEE_LABEL),
+    (MIMICS_DIR, NON_BEE_LABEL)
+  ]
 
-  bee_img_list      = list(BEE_DIR.glob('*.*'))
-  non_bee_img_list  = list(NON_BEE_DIR.glob('*.*'))
-  mimics_img_list   = list(MIMICS_DIR.glob('*.*'))
-
-  data_count = (  len(bee_img_list) +
-                  len(non_bee_img_list) +
-                  len(mimics_img_list)
-  )
-  data        = []
-  data_labels = []
-
-  section_print('Loading Dataset D2 (Bee vs Non-Bee)')
-  load_data(data, data_labels, bee_img_list,      BEE_LABEL)
-  print('section 1 Finished')
-
-  load_data(data, data_labels, non_bee_img_list,  NON_BEE_LABEL)
-  print('section 2 Finished')
-
-  load_data(data, data_labels, mimics_img_list,   NON_BEE_LABEL)
-  print('section 3 Finished')
-
-  section_print('Dataset D2 Statistics')
-  print(f'Total Images: {len(data)}')
-  print(f'Bee Images: {len(bee_img_list)}')
-  print(f'Non Bee Images: {len(non_bee_img_list + mimics_img_list)}')
-
-  return np.array(data), np.array(data_labels)
-
-
-
+  return load_dataset(img_dirs_and_labels)
