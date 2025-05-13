@@ -30,10 +30,12 @@ DATASET_2     = BASE_DIR      / 'dataset_2'
 BEE_DIR       = DATASET_2     / 'bee'
 NON_BEE_DIR   = DATASET_2     / 'non_bee'
 MIMICS_DIR    = DATASET_2     / 'mimics'
+MODEL_D2_DIR  = Path('model')
+MODEL_D2_FILE = MODEL_D2_DIR  / 'D2'
 IMAGE_SIZE = (224, 224)
 
-
 GPU_S = tf.config.list_physical_devices('GPU')
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 def section_print(str_s):
     print('\n\n')

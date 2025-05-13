@@ -1,5 +1,9 @@
 This project uses
 
 python=3.10.16
-tensorflow=2.10.0
-numpy=1.26.4
+tensorflow=2.10
+numpy=1.23.5
+
+
+you can use a newer version of tensorflow
+just make sure to have a compaitable cuDNN, CUDA, and Numpy versions

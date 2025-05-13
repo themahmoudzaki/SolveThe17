@@ -1,22 +1,19 @@
 from utils import *
 
-BASE_DIR      = Path('Data')
-DATASET_2     = BASE_DIR      / 'dataset_2'
-BEE_DIR       = DATASET_2     / 'bee'
-NON_BEE_DIR   = DATASET_2     / 'non_bee'
-MIMICS_DIR    = DATASET_2     / 'mimics'
+BEE_LABEL     = 0
+NON_BEE_LABEL = 1
 
-IMAGE_SIZE = (224, 224)
-
-def load_data(data_arr, data_label_arr, dir_list, value):
-  for img_path in dir_list:
+def load_data(data_arr, data_label_arr, img_path_list, label_value):
+  img_count = len(img_path_list)
+  print(f'Loading {img_count} images with label {label_value}...')
+  for img_path in img_path_list:
     img = tf.keras.preprocessing.image.load_img(
       img_path,
       target_size = IMAGE_SIZE
     )
     img_array = tf.keras.preprocessing.image.img_to_array(img)
     data_arr.append(img_array)
-    data_label_arr.append(value)
+    data_label_arr.append(label_value)
 
 def preprocess_D2():
 
@@ -31,17 +28,17 @@ def preprocess_D2():
   data        = []
   data_labels = []
 
-  section_print('Loading D2')
-  load_data(data, data_labels, bee_img_list,      0)
+  section_print('Loading Dataset D2 (Bee vs Non-Bee)')
+  load_data(data, data_labels, bee_img_list,      BEE_LABEL)
   print('section 1 Finished')
 
-  load_data(data, data_labels, non_bee_img_list,  1)
+  load_data(data, data_labels, non_bee_img_list,  NON_BEE_LABEL)
   print('section 2 Finished')
 
-  load_data(data, data_labels, mimics_img_list,   1)
+  load_data(data, data_labels, mimics_img_list,   NON_BEE_LABEL)
   print('section 3 Finished')
 
-  section_print('D2 Statistics')
+  section_print('Dataset D2 Statistics')
   print(f'Total Images: {len(data)}')
   print(f'Bee Images: {len(bee_img_list)}')
   print(f'Non Bee Images: {len(non_bee_img_list + mimics_img_list)}')
