@@ -16,7 +16,7 @@ def cnn_model_D2():
 
   model = tf.keras.Sequential(
     [
-      tf.keras.layers.Rescaling(1./255, input_shape=(*IMAGE_SIZE, 3)),
+      tf.keras.layers.InputLayer(input_shape=(*IMAGE_SIZE, 3)),
       tf.keras.layers.RandomFlip('horizontal'),
       tf.keras.layers.RandomRotation(0.2),
       tf.keras.layers.RandomZoom(0.2),

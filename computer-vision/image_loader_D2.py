@@ -1,5 +1,5 @@
-from utils import *
-
+from utils          import *
+from preprocess_D2  import preprocess_img
 
 BEE_LABEL     = 0
 NON_BEE_LABEL = 1
@@ -11,6 +11,7 @@ def load_image(img_path):
       target_size=IMAGE_SIZE
     )
     img_array = tf.keras.preprocessing.image.img_to_array(img)
+    img_array = preprocess_img(img_array)
 
     return img_array
   except Exception as err:
