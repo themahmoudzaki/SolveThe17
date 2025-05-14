@@ -1,5 +1,32 @@
+Okay, here is a corrected README file based on the analysis of your project files:
+
+```markdown
+# Bee Image Classification Project
+
+This project focuses on classifying images as containing bees versus non-bees (including bee mimics) using a Convolutional Neural Network (CNN) built with TensorFlow/Keras. It includes scripts for loading and preprocessing image data, training a model (D1), and an API for real-time video frame classification using the trained D1 model.
+
+## Project Structure
+
+computer-vision/
+├── Data/
+│   ├── dataset_1/ # Data for the D1 model
+│   │   ├── bee/              # Images of bees
+│   │   ├── non_bee/          # Images of non-bees
+│   │   └── mimics/           # Images of bee mimics
+├── model/
+│   ├── D1.h5                 # Saved TensorFlow model from model_D1.py
+├── utils.py                # Utility functions, constants, and imports
+├── preprocess_D1.py        # Image preprocessing (scaling) for D1 model
+├── image_loader_D1.py      # Image loading and labeling for D1 model
+├── model_D1.py             # CNN model definition, training, and saving for D1
+├── main.py                 # Main script to run D1 preprocessing and model training
+├── api.py                  # FastAPI with webSocket application
+├── environment.yml         # Creates the enviroment for this project using yml
+└── README.md               # This file
+```
+
 ## Prerequisites
-*   conda env create -f enviroment.yml
+*   conda env create -f environment.yml
 *   Python 3.10.x (as specified: 3.10.16)
 *   CUDA (as specified: 11.2 )
 *   CuDNN ( as specified: 8.1.* )
@@ -17,42 +44,17 @@
 ## Installation
 
 ### Conda Environment Setup
-1. Install [Miniconda](https://docs.conda.io/en/latest/miniconda.html) or Anaconda.
+1. Install Anaconda.
 2. Create the environment using:
    ```bash
    conda env create -f environment.yml
-   conda activate tensorflow-env
+   conda activate jager-ads
+   ```
 
 ### Or PIP
 You can typically install these using pip:
 ```bash
-pip install tensorflow=2.10.0 numpy=1.23.5 pandas scikit-learn matplotlib fastapi uvicorn "opencv-python" pyyaml h5py
-```
-
-
-```markdown
-# Bee Image Classification Project
-
-This project focuses on classifying images as containing bees versus non-bees (including bee mimics) using a Convolutional Neural Network (CNN) built with TensorFlow/Keras. It includes scripts for loading and preprocessing image data, training a model (D1), and an API for real-time video frame classification (which currently uses a D2 model).
-
-## Project Structure
-
-computer-vision/
-├── Data/
-│   ├── dataset_1/ # Data for the D1 model
-│   │   ├── bee/              # Images of bees
-│   │   ├── non_bee/          # Images of non-bees
-│   │   └── mimics/           # Images of bee mimics
-├── model/
-│   ├── D1/                   # Saved TensorFlow model from model_D1.py
-├── utils.py                # Utility functions, constants, and imports
-├── preprocess_D1.py        # Image preprocessing (scaling) for D1 model
-├── image_loader_D1.py      # Image loading and labeling for D1 model
-├── model_D1.py             # CNN model definition, training, and saving for D1
-├── main.py                 # Main script to run D1 preprocessing and model training
-├── api.py                  # FastAPI with webSocket application
-├── enviroment.yml          # Creates the enviroment for this project using yml
-└── README.md               # This file
+pip install tensorflow==2.10.0 numpy==1.23.5 pandas scikit-learn matplotlib fastapi uvicorn "opencv-python" pyyaml h5py tqdm
 ```
 
 ## File Descriptions
@@ -60,7 +62,7 @@ computer-vision/
 ### `utils.py`
 *   **Purpose**: Contains shared constants, configurations, and utility functions used across the project.
 *   **Key Contents**:
-    *   Imports common libraries: `os`, `pandas`, `numpy`, `matplotlib.pyplot`, `tensorflow`, `math`, `pathlib`, `sklearn.model_selection`, `sklearn.metrics`, `concurrent.futures.ThreadPoolExecutor`, `tqdm`.
+    *   Imports common libraries: `os`, `pandas`, `numpy`, `matplotlib.pyplot`, `tensorflow`, `math`, `pathlib`, `sklearn.model_selection`, `sklearn.metrics`, `concurrent.futures.ThreadPoolExecutor`, `tqdm`, `fastapi`, `uvicorn`, `cv2`.
     *   Defines base directory paths (`BASE_DIR`).
     *   **Dataset 1 (D1) Paths & Constants**:
         *   `DATASET_1`: Root directory for D1 (`Data/dataset_1`).
@@ -68,7 +70,7 @@ computer-vision/
         *   `NON_BEE_DIR`: Directory for non-bee images in D1 (`Data/dataset_1/non_bee`).
         *   `MIMICS_DIR`: Directory for bee mimic images in D1 (`Data/dataset_1/mimics`).
         *   `MODEL_D1_DIR`: Directory to save the D1 model (`model/`).
-        *   `MODEL_D1_FILE`: Specific path for the saved D1 model (`model/D1`).
+        *   `MODEL_D1_FILE`: Specific path for the saved D1 model (`model/D1.h5`).
         *   `IMAGE_SIZE = (224, 224)`: Target image dimensions for model input.
         *   `EPOCHS = 100`: Default number of training epochs.
         *   `BATCH_SIZE = 32`: Default batch size for training and loading.
@@ -92,7 +94,7 @@ computer-vision/
 *   **`preprocess_img(img_array)`**:
     *   Takes a NumPy array representing an image.
     *   Casts the image array to `tf.float32`.
-    *   Scales pixel values from the range to the [0.0, 1.0] range by dividing by 255.0.
+    *   Scales pixel values to the [0.0, 1.0] range by dividing by 255.0.
     *   Returns the scaled image array.
 
 ### `image_loader_D1.py`
@@ -165,37 +167,58 @@ computer-vision/
     5.  Saves the trained model to `MODEL_D1_FILE` using `model.save()`.
 
 ### `api.py`
-*   **Purpose**: Implements a FastAPI application to serve the bee classification model over a WebSocket for real-time video frame analysis.
+*   **Purpose**: Implements a FastAPI application to serve the bee classification model (D1) over a WebSocket for real-time video frame analysis.
 *   **Key Components**:
     *   `FastAPI` app initialization with title, description, and version.
-    *   **`get_model()`**:
-        *   Loads a TensorFlow model.
-    *   **`@app.websocket('/ws/video')`**:
+    *   Global `model` variable, initialized to `None`.
+    *   **`get_global_model()`**:
+        *   Loads the TensorFlow model specified by `MODEL_D1_FILE` (which is `model/D1.h5`).
+        *   Prints success or error messages related to model loading.
+        *   Returns the loaded model or `None`.
+    *   **`preprocess_frame_for_api(frame_bgr)`**:
+        *   Resizes the input frame to `IMAGE_SIZE`.
+        *   Converts the frame from BGR to RGB.
+        *   Calls `preprocess_img` (from `preprocess_D1.py`) for scaling.
+        *   Returns the processed frame as a NumPy array or `None` on error.
+    *   **`@app.on_event("startup")`**:
+        *   Event handler that loads the global model using `get_global_model()` when the API starts.
+    *   **`@app.websocket("/ws/video")`**:
         *   Defines a WebSocket endpoint.
         *   Accepts WebSocket connections.
+        *   Checks if the model is loaded; sends an error and closes if not.
         *   Enters a loop to continuously receive byte data (video frames).
         *   Decodes the byte data into an image frame using `cv2.imdecode()`.
-    *   **`@app.get('/health')`**:
-        *   A simple HTTP GET endpoint to check if the API is running. Returns `{'status': 'ok'}`.
-    *   `uvicorn.run(app, host='0.0.0.0', port=3000)`: Starts the FastAPI application using Uvicorn ASGI server, making it accessible on all network interfaces on port 8000.
+        *   Preprocesses the frame using `preprocess_frame_for_api`.
+        *   Collects frames into a batch (`frame_batch`) of size `API_BATCH_SIZE` (defined as 8).
+        *   Once a batch is ready:
+            *   Converts the batch to a NumPy array.
+            *   Uses `model.predict()` to get predictions for the batch.
+            *   Processes prediction scores to determine "Bee" or "Non-Bee" labels and confidence.
+            *   Sends a JSON response to the WebSocket client with predictions for the batch.
+            *   Clears the frame batch.
+        *   Handles `WebSocketDisconnect` and other exceptions gracefully.
+    *   **`@app.get("/health")`**:
+        *   A simple HTTP GET endpoint to check if the API is running and if the model is loaded. Returns `{"status": "ok", "model_loaded": model is not None}`.
+    *   `if __name__ == "__main__": uvicorn.run(app, host="0.0.0.0", port=3000)`: Starts the FastAPI application using Uvicorn ASGI server, making it accessible on all network interfaces on port 3000.
 
 
 ## How to Run
 
 ### 1. Training the D1 Model:
-  This step only needs to be done if the model is not already trained and saved
+  This step only needs to be done if the model is not already trained and saved (e.g., `model/D1.h5` does not exist or you want to retrain).
   Ensure your `Data/dataset_1` directory is populated with `bee`, `non_bee`, and `mimics` subdirectories containing images.
   ```bash
    python main.py
-  ```
-   This will:
+  ```   This will:
    *   Load and preprocess images from `Data/dataset_1`.
    *   Define and compile the D1 CNN model.
    *   Train the model, evaluate it, and print metrics.
-   *   Save the trained model to `model/D1`.
+   *   Save the trained model to `model/D1.h5`.
 
 ### 2. Running the API:
+   Ensure the model `model/D1.h5` exists (either pre-trained or trained in step 1).
    ```bash
    python api.py
    ```
-   The API will start, and you can connect to the WebSocket endpoint `/ws/video` (e.g., using a JavaScript client) to send video frames for classification. You can also check the health at `http://localhost:8000/health`.
+   The API will start, and you can connect to the WebSocket endpoint `/ws/video` to send video frames for classification. You can also check the health at `http://localhost:3000/health`.
+```
