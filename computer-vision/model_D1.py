@@ -1,11 +1,11 @@
 from utils import *
 
-def model_D2(X, y, test_size=0.2, random_state=42):
-  model = cnn_model_D2()
+def model_D1(X, y, test_size=0.2, random_state=42):
+  model = cnn_model_D1()
   train_model(model, X, y, test_size, random_state)
 
-def cnn_model_D2():
-  section_print('Creating D2 CNN Model Architecture')
+def cnn_model_D1():
+  section_print('Creating D1 CNN Model Architecture')
   if len(GPU_S) > 0:
     try:
         policy = tf.keras.mixed_precision.Policy('mixed_float16')
@@ -73,7 +73,7 @@ def cnn_model_D2():
 
 
 def train_model(model, X, y, test_size, random_state):
-  section_print('Training D2 CNN Model')
+  section_print('Training D1 CNN Model')
   X_train, X_test, y_train, y_test = train_test_split(
     X, y,
     test_size=test_size,
@@ -92,12 +92,14 @@ def train_model(model, X, y, test_size, random_state):
     ]
   )
   evaluation_results = model.evaluate(X_test, y_test, verbose=0)
+
+  section_print('Model Metrics')
   for metric_name, metric_value in zip(model.metrics_names, evaluation_results):
      print(f'{metric_name}: {metric_value:.4f}')
 
-  MODEL_D2_DIR.mkdir(exist_ok=True)
+  MODEL_D1_DIR.mkdir(exist_ok=True)
 
   section_print('Saving Model')
-  model.save(MODEL_D2_FILE)
+  model.save(MODEL_D1_FILE)
   print('model saved succesfully')
 

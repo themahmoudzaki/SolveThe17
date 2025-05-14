@@ -1,0 +1,31 @@
+name: tensorflow-env
+channels:
+  - conda-forge
+  - defaults
+
+dependencies:
+  # Python and GPU libraries
+  - python=3.10.16
+  - cudatoolkit=11.2
+  - cudnn=8.1
+
+  # Core data science stack
+  - numpy=1.23.5
+  - pandas
+  - scikit-learn
+  - matplotlib
+
+  # API & serving
+  - fastapi
+  - uvicorn
+
+  # OpenCV (Conda‑Forge provides cv2)
+  - opencv
+
+  # Ensure pip is available
+  - pip
+
+  # Additional pip installs
+  - pip:
+      - tensorflow==2.10.0
+      - tqdm

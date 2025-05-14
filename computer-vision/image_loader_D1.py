@@ -1,5 +1,5 @@
 from utils          import *
-from preprocess_D2  import preprocess_img
+from preprocess_D1  import preprocess_img
 
 BEE_LABEL     = 0
 NON_BEE_LABEL = 1
@@ -44,7 +44,7 @@ def load_dataset(img_dirs_and_labels):
   bee_count     = 0
   non_bee_count = 0
 
-  section_print('Loading Dataset D2')
+  section_print('Loading Dataset D1')
 
   for dir_path, label in img_dirs_and_labels:
     img_paths = list(dir_path.glob('*.*'))
@@ -71,7 +71,7 @@ def load_dataset(img_dirs_and_labels):
 
   return np.array(data), np.array(labels)
 
-def loading_handler_D2():
+def loading_handler_D1():
   img_dirs_and_labels = [
     (BEE_DIR, BEE_LABEL),
     (NON_BEE_DIR, NON_BEE_LABEL),

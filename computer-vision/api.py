@@ -11,7 +11,7 @@ app = FastAPI(
 )
 
 def get_model():
-  model_path = Path('model') / 'D2'
+  model_path = Path('model') / 'D1'
   model = tf.load_model(model_path)
 
   return model
