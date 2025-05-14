@@ -1,31 +1,35 @@
-name: tensorflow-env
+name: test2-env
 channels:
   - conda-forge
   - defaults
 
 dependencies:
-  # Python and GPU libraries
+  # Core dependencies
   - python=3.10.16
   - cudatoolkit=11.2
   - cudnn=8.1
 
-  # Core data science stack
+  # Data processing
   - numpy=1.23.5
   - pandas
   - scikit-learn
+
+  # Visualization
   - matplotlib
 
-  # API & serving
+  # API
   - fastapi
   - uvicorn
 
-  # OpenCV (Conda‑Forge provides cv2)
+  # Image processing
   - opencv
 
-  # Ensure pip is available
+  # System
   - pip
 
-  # Additional pip installs
+  # Pip packages
   - pip:
-      - tensorflow==2.10.0
-      - tqdm
+    - tensorflow==2.10.0
+    - tqdm
+    - pyyaml
+    - h5py

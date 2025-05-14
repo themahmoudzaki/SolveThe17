@@ -1,5 +1,4 @@
 ## Prerequisites
-### All these prerequisites can be downloaded through creating a conda env. using the enviroment.yml file
 *   conda env create -f enviroment.yml
 *   Python 3.10.x (as specified: 3.10.16)
 *   CUDA (as specified: 11.2 )
@@ -15,6 +14,16 @@
 *   pyyaml
 *   h5py
 
+## Installation
+
+### Conda Environment Setup
+1. Install [Miniconda](https://docs.conda.io/en/latest/miniconda.html) or Anaconda.
+2. Create the environment using:
+   ```bash
+   conda env create -f environment.yml
+   conda activate tensorflow-env
+
+### Or PIP
 You can typically install these using pip:
 ```bash
 pip install tensorflow=2.10.0 numpy=1.23.5 pandas scikit-learn matplotlib fastapi uvicorn "opencv-python" pyyaml h5py
@@ -166,12 +175,9 @@ computer-vision/
         *   Accepts WebSocket connections.
         *   Enters a loop to continuously receive byte data (video frames).
         *   Decodes the byte data into an image frame using `cv2.imdecode()`.
-        *   **TODO**: The frame processing and model prediction logic within the WebSocket loop is currently incomplete. It receives the frame but doesn't yet preprocess it for the model or send back a classification.
-        *   Includes basic error handling for invalid frames.
-        *   Handles `WebSocketDisconnect`.
     *   **`@app.get('/health')`**:
         *   A simple HTTP GET endpoint to check if the API is running. Returns `{'status': 'ok'}`.
-    *   `uvicorn.run(app, host='0.0.0.0', port=8000)`: Starts the FastAPI application using Uvicorn ASGI server, making it accessible on all network interfaces on port 8000.
+    *   `uvicorn.run(app, host='0.0.0.0', port=3000)`: Starts the FastAPI application using Uvicorn ASGI server, making it accessible on all network interfaces on port 8000.
 
 
 ## How to Run
@@ -189,7 +195,6 @@ computer-vision/
    *   Save the trained model to `model/D1`.
 
 ### 2. Running the API:
-   **Important:** The API currently tries to load a model from `model/D1`. Make sure a compatible TensorFlow SavedModel exists
    ```bash
    python api.py
    ```
