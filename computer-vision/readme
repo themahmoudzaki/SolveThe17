@@ -12,10 +12,12 @@
 *   FastAPI
 *   Uvicorn
 *   OpenCV-Python (`cv2`) (for the API)
+*   pyyaml
+*   h5py
 
 You can typically install these using pip:
 ```bash
-pip install tensorflow=2.10.0 numpy=1.23.5 pandas scikit-learn matplotlib fastapi uvicorn "opencv-python"
+pip install tensorflow=2.10.0 numpy=1.23.5 pandas scikit-learn matplotlib fastapi uvicorn "opencv-python" pyyaml h5py
 ```
 
 
