@@ -76,8 +76,8 @@ pip install tensorflow==2.10.0 numpy==1.23.5 pandas scikit-learn matplotlib fast
         *   `MODEL_D1_DIR`: Directory to save the D1 model (`model/`).
         *   `MODEL_D1_FILE`: Specific path for the saved D1 model (`model/D1.h5`).
         *   `IMAGE_SIZE = (224, 224)`: Target image dimensions for model input.
-        *   `EPOCHS = 100`: Default number of training epochs.
-        *   `BATCH_SIZE = 32`: Default batch size for training and loading.
+        *   `EPOCHS`: Default number of training epochs.
+        *   `BATCH_SIZE`: Default batch size for training and loading.
     *   GPU availability check (`GPU_S`) and TensorFlow logging suppression (`os.environ['TF_CPP_MIN_LOG_LEVEL']`).
     *   `section_print()`: A helper function for formatted console output.
 
