@@ -22,7 +22,6 @@ import * as Font from "expo-font";
 // Import from centralized configs and utilities
 import Colors from "@/constants/Colors";
 import { APP_VERSION } from "@/constants/Config";
-import { honeycombPattern } from "@/assets/patterns";
 
 export default function LandingScreen() {
 	const router = useRouter();
@@ -107,7 +106,6 @@ export default function LandingScreen() {
 	return (
 		<LinearGradient colors={Colors.gradients.primaryBackground as any} style={styles.container}>
 			<ImageBackground
-				source={honeycombPattern}
 				style={styles.imageBackground}
 				imageStyle={styles.imageBackgroundPattern}>
 				<StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
