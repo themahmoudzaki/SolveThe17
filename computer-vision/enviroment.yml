@@ -1,0 +1,35 @@
+name: jager-ads
+channels:
+  - conda-forge
+  - defaults
+
+dependencies:
+  # Core dependencies
+  - python=3.10.16
+  - cudatoolkit=11.2
+  - cudnn=8.1
+
+  # Data processing
+  - numpy=1.23.5
+  - pandas
+  - scikit-learn
+
+  # Visualization
+  - matplotlib
+
+  # API
+  - fastapi
+  - uvicorn
+
+  # Image processing
+  - opencv
+
+  # System
+  - pip
+
+  # Pip packages
+  - pip:
+    - tensorflow==2.10.0
+    - tqdm
+    - pyyaml
+    - h5py
