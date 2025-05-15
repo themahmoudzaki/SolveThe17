@@ -1,26 +1,39 @@
 from utils import *
 from preprocess_D1 import preprocess_img
 
-import httpx
-from typing import List, Dict, Optional
-import google.generativeai as genAI
-
+# --- FastAPI Application Setup ---
 app = FastAPI(
     title="Bee Classification API",
     description="Upload a video and get frame by frame analysis",
     version="1.0.0",
 )
 
+# --- Classification Labels ---
 BEE_LABEL_STR = "Bee"
 NON_BEE_LABEL_STR = "Non-Bee"
 
+# --- Global Variables ---
 model = None
-
-fetched_info_items: List[Dict[str, str]] = []
+fetched_info_items: List[
+    Dict[str, str]
+] = []  # Cache for information fetched from Gemini API
+"""
+We know that the API key should never be pushed to github
+and should be kept in a separate file that is ignored by git
+however to make the code runnable to the judges we added it
+"""
 GEMINI_API_KEY_NAME = "AIzaSyDjWKPn2OqOS3cAMP49rv1mqMOEHjQPkE4"
 
 
-def get_global_model():
+def get_global_model() -> Optional[tf.keras.Model]:
+    """
+    Loads the pre-trained Keras model from the specified file path.
+
+    Prints success or error messages to the console.
+
+    Returns:
+        Optional[tf.keras.Model]: The loaded Keras model if successful, otherwise None.
+    """
     section_print("Loading Model")
     print(f"Model-path: {MODEL_D1_FILE}")
 
@@ -35,8 +48,22 @@ def get_global_model():
 
 
 def preprocess_frame_for_api(frame_bgr: np.ndarray) -> np.ndarray | None:
+    """
+    Preprocesses a single video frame (BGR format) for model prediction.
+
+    Resizes, converts color space (BGR to RGB), and applies model-specific preprocessing.
+
+    Args:
+        frame_bgr (np.ndarray): The input frame in BGR format.
+
+    Returns:
+        Optional[np.ndarray]: The processed frame as a NumPy array if successful, otherwise None.
+                               The array is ready to be part of a batch for prediction.
+    """
     try:
+        # Resize frame to the model's expected input size
         frame_resized = cv2.resize(frame_bgr, (IMAGE_SIZE[1], IMAGE_SIZE[0]))
+        # Convert frame from BGR (OpenCV default) to RGB
         frame_rgb = cv2.cvtColor(frame_resized, cv2.COLOR_BGR2RGB)
 
         processed_tensor = preprocess_img(frame_rgb)
@@ -50,6 +77,19 @@ def preprocess_frame_for_api(frame_bgr: np.ndarray) -> np.ndarray | None:
 async def fetch_info_from_gemini(
     api_key: str, topic_query: str, topic_display_name: str, model_name: str = ""
 ) -> Optional[Dict[str, str]]:
+    """
+    Asynchronously fetches information from the Google Gemini API for a given topic.
+
+    Args:
+        api_key (str): The Google Generative AI API key.
+        topic_query (str): The specific query string to send to the Gemini API.
+        topic_display_name (str): The name of the topic to be used in the returned dictionary.
+        model_name (str, optional): The name of the Gemini model to use. Defaults to "gemini-pro".
+
+    Returns:
+        Optional[Dict[str, str]]: A dictionary containing the topic and its fetched information summary
+                                  if successful, otherwise None.
+    """
     try:
         genAI.configure(api_key=api_key)
         gemini_model = genAI.GenerativeModel(model_name)
@@ -76,6 +116,12 @@ async def fetch_info_from_gemini(
 
 @app.on_event("startup")
 async def startup_event_handler():
+    """
+    Event handler executed when the FastAPI application starts.
+
+    - Loads the global machine learning model.
+    - Fetches initial information from the Gemini API for predefined topics.
+    """
     global model
     if model is None:
         model = get_global_model()
@@ -104,6 +150,16 @@ async def startup_event_handler():
 
 @app.websocket("/ws/video")
 async def video_classifier(ws: WebSocket):
+    """
+    WebSocket endpoint for real-time video frame classification.
+
+    Receives video frames, preprocesses them, performs batch predictions using the loaded model,
+    and sends classification results back to the client.
+    Also sends initial information fetched from Gemini API upon connection.
+
+    Args:
+        ws (WebSocket): The WebSocket connection object.
+    """
     await ws.accept()
     section_print("WebSocket Client Connected")
     if fetched_info_items:
@@ -218,6 +274,12 @@ async def video_classifier(ws: WebSocket):
 
 @app.get("/api/info")
 async def get_information():
+    """
+    HTTP GET endpoint to retrieve the fetched information items (news/updates).
+
+    Returns:
+        dict: A dictionary containing the list of fetched information items or a message if unavailable.
+    """
     if not fetched_info_items:
         return {
             "info_items": [],
@@ -228,8 +290,19 @@ async def get_information():
 
 @app.get("/health")
 def health_check():
+    """
+    HTTP GET endpoint for health checking the API.
+
+    Indicates if the API is running and if the model is loaded.
+
+    Returns:
+        dict: A dictionary with the status and model loaded status.
+    """
     return {"status": "ok", "model_loaded": model is not None}
 
-
+# --- Main Execution Block ---
 if __name__ == "__main__":
+    # Run the FastAPI application using Uvicorn ASGI server
+    # Host "0.0.0.0" makes the server accessible on the network
+    # Port 3000 is the port the server will listen on
     uvicorn.run(app, host="0.0.0.0", port=3000)

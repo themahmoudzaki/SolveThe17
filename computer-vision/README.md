@@ -48,8 +48,11 @@ computer-vision/
 ## Installation
 
 ### Conda Environment Setup
+0. Make sure you have up-to-date NVIDEA Drivers
 1. Install Anaconda.
-2. Create the environment using:
+2. Open Anaconda Prompt
+3. CD to this directory
+4. Create the environment using:
    ```bash
    conda env create -f environment.yml
    conda activate jager-ads
@@ -60,6 +63,14 @@ You can typically install these using pip:
 ```bash
 pip install tensorflow==2.10.0 numpy==1.23.5 pandas scikit-learn matplotlib fastapi uvicorn "opencv-python" pyyaml h5py tqdm httpx protobuf==3.20.3 "google-generativeai" tensorflow-addons
 ```
+
+## Model Metrics for Validation Set
+1. Loss: 0.26
+2. Accuracy: 0.88
+3. Precision: 0.77
+4. Recall: 0.86
+5. Auc: 0.95
+6. F1_score: 0.81
 
 ## File Descriptions
 
