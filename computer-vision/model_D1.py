@@ -60,6 +60,9 @@ def cnn_model_D1():
             tf.keras.metrics.Precision(name="precision"),
             tf.keras.metrics.Recall(name="recall"),
             tf.keras.metrics.AUC(name="auc"),
+            tfa.metrics.F1Score(
+                num_classes=1, threshold=0.5, average="micro", name="f1_score"
+            ),
         ],
     )
 
@@ -84,14 +87,15 @@ def train_model(model, X, y, test_size, random_state):
             tf.keras.callbacks.EarlyStopping(patience=5, restore_best_weights=True)
         ],
     )
-    evaluation_results = model.evaluate(X_test, y_test, verbose=0)
+    MODEL_D1_DIR.mkdir(exist_ok=True)
+
 
     section_print("Model Metrics")
+    evaluation_results = model.evaluate(X_test, y_test, verbose=0)
     for metric_name, metric_value in zip(model.metrics_names, evaluation_results):
         print(f"{metric_name}: {metric_value:.4f}")
-
-    MODEL_D1_DIR.mkdir(exist_ok=True)
 
     section_print("Saving Model")
     model.save(MODEL_D1_FILE)
     print("model saved succesfully")
+

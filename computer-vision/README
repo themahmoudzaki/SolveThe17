@@ -27,7 +27,6 @@ computer-vision/
 ```
 
 ## Prerequisites
-*   conda env create -f environment.yml
 *   Python 3.10.x (as specified: 3.10.16)
 *   CUDA (as specified: 11.2 )
 *   CuDNN ( as specified: 8.1.* )
@@ -41,6 +40,10 @@ computer-vision/
 *   OpenCV-Python (`cv2`) (for the API)
 *   pyyaml
 *   h5py
+*   httpx
+*   protobuf==3.20.3
+*   google-generativeai
+*   tensorflow-addons
 
 ## Installation
 
@@ -55,7 +58,7 @@ computer-vision/
 ### Or PIP
 You can typically install these using pip:
 ```bash
-pip install tensorflow==2.10.0 numpy==1.23.5 pandas scikit-learn matplotlib fastapi uvicorn "opencv-python" pyyaml h5py tqdm
+pip install tensorflow==2.10.0 numpy==1.23.5 pandas scikit-learn matplotlib fastapi uvicorn "opencv-python" pyyaml h5py tqdm httpx protobuf==3.20.3 "google-generativeai" tensorflow-addons
 ```
 
 ## File Descriptions

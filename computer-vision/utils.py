@@ -3,10 +3,10 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import tensorflow as tf
+import tensorflow_addons as tfa
 import math
 import uvicorn
 import cv2
-
 from pathlib import Path
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import confusion_matrix, classification_report
@@ -22,7 +22,7 @@ GPU_S = tf.config.list_physical_devices("GPU")
 IMAGE_SIZE = (224, 224)
 EPOCHS = 100
 BATCH_SIZE = 32
-os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
+os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
 
 
 # D1
