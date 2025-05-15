@@ -1,50 +1,98 @@
-# Welcome to your Expo app 👋
+# Jager ADS Mobile App
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+**The official mobile application for Jager ADS - an AI-driven beekeeping assistant designed to help beekeepers monitor hive health and protect pollinators.**
 
-## Get started
+This React Native mobile application serves as the primary interface for beekeepers to interact with the Jager ADS system. It provides real-time monitoring of beehives, alerts for unusual conditions, and a comprehensive dashboard of hive health metrics, all powered by our advanced computer vision AI backend.
 
-1. Install dependencies
+## Table of Contents
 
-   ```bash
-   npm install
-   ```
+-   [Features](#features)
+-   [Technology Stack](#technology-stack)
+-   [Getting Started](#getting-started)
+    -   [Prerequisites](#prerequisites)
+    -   [Installation](#installation)
+    -   [Running the App](#running-the-app)
+-   [App Structure](#app-structure)
+-   [Contributing](#contributing)
+-   [License](#license)
 
-2. Start the app
+## Features
 
-   ```bash
-   npx expo start
-   ```
+-   **Real-time Hive Monitoring**: Stream live video feed from your hive cameras
+-   **AI-Powered Detection**: See real-time analysis of bee presence and activity
+-   **Event Log**: Track historical data and events for all connected hives
+-   **News Feed**: Stay updated with the latest beekeeping news and research
+-   **Responsive Design**: Works across multiple device sizes and orientations
 
-In the output, you'll find options to open the app in a
+## Technology Stack
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+-   **Framework**: React Native with Expo
+-   **Navigation**: React Navigation (Tab-based and Stack-based)
+-   **State Management**: React Context API
+-   **Networking**: WebSocket for real-time data, REST API for static content
+-   **UI Components**: Custom themed components with consistent styling
+-   **Animations**: React Native Animated API for smooth transitions
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+## Getting Started
 
-## Get a fresh project
+### Prerequisites
 
-When you're ready, run:
+-   Node.js (v16.0 or higher)
+-   npm or yarn
+-   Expo CLI
+-   iOS/Android device or emulator
+
+### Installation
+
+1. Clone the repository:
+
+2. Install dependencies:
 
 ```bash
-npm run reset-project
+npm install
+# or
+yarn install
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+3. Configure the backend connection:
+    - Open `constants/Config.ts`
+    - Update the `BACKEND_CONFIG.API_BASE` and `BACKEND_CONFIG.WS_URL` to point to your backend server
 
-## Learn more
+### Running the App
 
-To learn more about developing your project with Expo, look at the following resources:
+-   Start the Expo development server:
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+```bash
+npx expo start
+```
 
-## Join the community
+-   Open the app on your device:
+    -   Use the Expo Go app to scan the QR code
+    -   Press 'i' or 'a' in the terminal to open in iOS or Android emulator
 
-Join our community of developers creating universal apps.
+## App Structure
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+-   **app/**: Main application screens and navigation
+    -   **(tabs)/**: Tab-based navigation screens
+        -   **index.tsx**: Home screen with camera feed
+        -   **logs.tsx**: Event log screen
+        -   **news.tsx**: News feed screen
+    -   **index.tsx**: Landing/authentication screen
+-   **components/**: Reusable UI components
+
+    -   **ThemedText.tsx**: Text component with consistent styling
+    -   **ThemedView.tsx**: Container component with theming
+    -   **HapticTab.tsx**: Tab navigation with haptic feedback
+
+-   **constants/**: App configuration and styling constants
+
+    -   **Colors.ts**: Color palette definitions
+    -   **Config.ts**: Backend URLs and app configuration
+    -   **Styles.ts**: Common style patterns
+
+-   **contexts/**: React Context providers
+
+    -   **BackendServiceContext.tsx**: Websocket and API service provider
+
+-   **services/**: Business logic separated from UI
+    -   **BackendService.ts**: API communication handler
