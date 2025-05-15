@@ -31,6 +31,7 @@ interface BackendServiceContextType {
 	disconnectService: () => void;
 	resetConnectionAttempts: () => void;
 	sendFrame: (frameData: FrameData) => void;
+	fetchNews: () => Promise<any>;
 }
 
 const BackendServiceContext = createContext<BackendServiceContextType | undefined>(undefined);
@@ -301,6 +302,21 @@ export const BackendServiceProvider: React.FC<BackendServiceProviderProps> = ({ 
 				);
 			},
 			sendFrame,
+			fetchNews: async () => {
+				try {
+					const response = await fetch(
+						`${BACKEND_CONFIG.API_BASE}${BACKEND_CONFIG.ENDPOINTS.NEWS}`
+					);
+					if (response.ok) {
+						return await response.json();
+					} else {
+						throw new Error("Failed to fetch news");
+					}
+				} catch (error) {
+					console.error("Error fetching news:", error);
+					throw error;
+				}
+			},
 		}),
 		[
 			service,

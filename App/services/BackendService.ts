@@ -195,6 +195,26 @@ export class BackendService {
 		}
 	}
 
+	/**
+	 * Fetch news articles from the backend
+	 * @returns Promise with news articles data
+	 */
+	public async fetchNews(): Promise<any> {
+		try {
+			const response = await fetch(
+				`${BACKEND_CONFIG.API_BASE}${BACKEND_CONFIG.ENDPOINTS.NEWS}`
+			);
+			if (!response.ok) {
+				throw new Error(`HTTP error! Status: ${response.status}`);
+			}
+			return await response.json();
+		} catch (error) {
+			console.error("BackendService: Error fetching news:", error);
+			this.handleError(error instanceof Error ? error : new Error(String(error)));
+			throw error;
+		}
+	}
+
 	private handleError(error: Error): void {
 		this.errorSubscribers.forEach((cb) => cb(error));
 	}

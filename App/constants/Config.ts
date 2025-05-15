@@ -30,6 +30,7 @@ export const BACKEND_CONFIG = {
 		INSIGHTS: "/insights",
 		USERS: "/users",
 		ANALYTICS: "/analytics",
+		NEWS: "/news",
 	},
 
 	// Connection retry settings
