@@ -39,11 +39,11 @@ def get_global_model() -> Optional[tf.keras.Model]:
 
     try:
         loaded_model = load_model(MODEL_D1_FILE)
-        print("Model loaded successfully")
+        print("\nModel loaded successfully")
         return loaded_model
 
     except Exception as err:
-        print(f"Error loading model: {err}")
+        print(f"\nError loading model: {err}")
         return None
 
 
@@ -75,7 +75,7 @@ def preprocess_frame_for_api(frame_bgr: np.ndarray) -> np.ndarray | None:
 
 
 async def fetch_info_from_gemini(
-    api_key: str, topic_query: str, topic_display_name: str, model_name: str = ""
+    api_key: str, topic_query: str, topic_display_name: str, model_name: str = "gemini-2.0-flash"
 ) -> Optional[Dict[str, str]]:
     """
     Asynchronously fetches information from the Google Gemini API for a given topic.
