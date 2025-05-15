@@ -1,0 +1,75 @@
+---
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { 
+  title = "BeeWise - Smart Bee Management System", 
+  description = "BeeWise uses computer vision to detect bees and their predators, providing valuable insights to beekeepers for better hive management."
+} = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+  </head>
+  <body class="min-h-screen bg-gradient-to-br from-honey-50 to-white text-gray-800 font-sans">
+    <slot />
+  </body>
+</html>
+
+<style is:global>
+  html {
+    font-family: 'Inter', system-ui, sans-serif;
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    margin: 0;
+    padding: 0;
+    line-height: 1.5;
+    color: #333;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    line-height: 1.2;
+    font-weight: 700;
+  }
+  
+  p {
+    margin-bottom: 1rem;
+  }
+  
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+  
+  .fadeIn {
+    animation: fadeIn 0.8s ease-in-out forwards;
+  }
+  
+  @keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+  }
+  
+  .fadeInUp {
+    animation: fadeInUp 0.8s ease-in-out forwards;
+  }
+  
+  @keyframes fadeInUp {
+    0% { opacity: 0; transform: translateY(20px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+</style>
