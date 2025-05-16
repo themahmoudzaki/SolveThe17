@@ -1,3 +1,5 @@
+import { DEV_WS_URL, DEV_API_BASE, PROD_WS_URL, PROD_API_BASE } from "@env";
+
 /**
  * Central configuration file for the application
  * Contains all configurable parameters and environment-specific settings
@@ -19,10 +21,10 @@ export const APP_VERSION = {
  */
 export const BACKEND_CONFIG = {
 	// Base URL for WebSocket communication
-	WS_URL: __DEV__ ? "ws://192.168.1.3:8080/live" : "wss://api.solvethe17.com/live",
+	WS_URL: __DEV__ ? DEV_WS_URL : PROD_WS_URL,
 
 	// Base URL for REST API endpoints
-	API_BASE: __DEV__ ? "http://192.168.1.3:8080/api" : "https://api.solvethe17.com/api",
+	API_BASE: __DEV__ ? DEV_API_BASE : PROD_API_BASE,
 
 	// API Endpoints
 	ENDPOINTS: {
