@@ -1,8 +1,8 @@
-# Jager ADS Mobile App
+# JägerADS Mobile App
 
-**The official mobile application for Jager ADS - an AI-driven beekeeping assistant designed to help beekeepers monitor hive health and protect pollinators.**
+**The official mobile application for JägerADS - an AI-driven beekeeping assistant designed to help beekeepers monitor hive health and protect pollinators.**
 
-This React Native mobile application serves as the primary interface for beekeepers to interact with the Jager ADS system. It provides real-time monitoring of beehives, alerts for unusual conditions, and a comprehensive dashboard of hive health metrics, all powered by our advanced computer vision AI backend.
+This React Native mobile application serves as the primary interface for beekeepers to interact with the JägerADS system. It provides real-time monitoring of beehives, alerts for unusual conditions, and a comprehensive dashboard of hive health metrics, all powered by our advanced computer vision AI backend.
 
 ## Table of Contents
 
