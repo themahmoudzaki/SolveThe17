@@ -48,7 +48,7 @@ def preprocess_frame_for_api(frame_bgr: np.ndarray) -> np.ndarray | None:
 
 
 async def fetch_info_from_gemini(
-    api_key: str, topic_query: str, topic_display_name: str, model_name: str = ""
+    api_key: str, topic_query: str, topic_display_name: str, model_name: str = "gemini-2.0-flash"
 ) -> Optional[Dict[str, str]]:
     try:
         genAI.configure(api_key=api_key)
@@ -56,7 +56,7 @@ async def fetch_info_from_gemini(
         prompt = f"Provide a concise, up-to-date piece of information consisting of a head, body, and 3 bullet points of key info \
                 regarding {topic_query}. Imagining that this is for a quick news brief"
 
-        response = await model.generate_content_async(prompt)
+        response = await gemini_model.generate_content_async(prompt)
         if response.parts:
             generated_text = "".join(
                 part.text for part in response.parts if hasattr(part, "text")
