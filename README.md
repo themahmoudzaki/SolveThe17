@@ -1,3 +1,7 @@
+# Google Drive link for the complete project with the training data and trained model
+
+[google-drive](https://drive.google.com/file/d/1WepFbK8vOSHkqvOX2Mcx_oDKOgQNXagk/view?usp=sharing)
+
 # JägerADS - AI-Driven Beekeeping Assistant
 
 **JägerADS is an AI-driven beekeeping assistant designed to help beekeepers monitor hive health and protect pollinators.**
