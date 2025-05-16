@@ -1,9 +1,7 @@
 from utils import *
 from preprocess_D1 import preprocess_img
 
-import httpx
-from typing import List, Dict, Optional
-import google.generativeai as genAI
+
 
 app = FastAPI(
     title="Bee Classification API",
